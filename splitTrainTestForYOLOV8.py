@@ -2,15 +2,15 @@ import cv2,os,random,shutil
 
 newdataset_root_file='/home/kingargroo/seed/yolov8'
 img_root_file='/home/kingargroo/seed/rice'
-label_root_file='/home/kingargroo/seed/ricelabel/label3'
+label_root_file='/home/kingargroo/seed/ricelabel/label2'
 
 #create new files
 os.makedirs(newdataset_root_file+'/train')
-os.makedirs(newdataset_root_file+'/test')
+os.makedirs(newdataset_root_file+'/val')
 os.makedirs(newdataset_root_file+'/train'+'/images')
 os.makedirs(newdataset_root_file+'/train'+'/labels')
-os.makedirs(newdataset_root_file+'/test'+'/images')
-os.makedirs(newdataset_root_file+'/test'+'/labels')
+os.makedirs(newdataset_root_file+'/val'+'/images')
+os.makedirs(newdataset_root_file+'/val'+'/labels')
 
 #spilt the iamge and labels according to idx
 img_list=os.listdir(img_root_file)
@@ -21,10 +21,22 @@ train_ratio=0.85
 train_num=int(train_ratio*img_num)
 train_id=random_numbers[:train_num]
 test_id=random_numbers[train_num::]
-train_img_list=[img_list[id] for id in train_id]
-test_img_list=[img_list[id] for id in test_id]
-train_label_list=[label_list[id] for id in train_id]
-test_label_list=[label_list[id] for id in test_id]
+train_img_list, test_img_list = [], []
+train_label_list, test_label_list = [], []
+
+for id in train_id:
+    train_img_list.append(img_list[id])
+    name = img_list[id].split(".")[0]
+    label_name = name + '.txt'
+    train_label_list.append(label_name)
+for id_ in test_id:
+    test_img_list.append(img_list[id_])
+    name = img_list[id_].split(".")[0]
+    label_name = name + '.txt'
+    test_label_list.append(label_name)
+
+assert len(train_img_list) == len(train_label_list)
+assert len(test_img_list) == len(test_label_list)
 
 for img_name,label_name in zip(train_img_list,train_label_list):
     img_raw_path=os.path.join(img_root_file,img_name)
