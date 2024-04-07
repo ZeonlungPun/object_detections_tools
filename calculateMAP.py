@@ -42,8 +42,8 @@ for pred_file,gt_file in zip(prediction_file_list,groundtruth_file_list):
         )
     )
 
-mAP=MeanAveragePrecision(box_format='cxcywh',iou_type='bbox',max_detection_thresholds=[1500]*3)
+mAP=MeanAveragePrecision(box_format='cxcywh',iou_type='bbox',max_detection_thresholds=[1500]*3,iou_thresholds=None,backend='faster_coco_eval')
 mAP.update(preds=preds,target=targets)
 mAP_dict=mAP.compute()
-print(mAP_dict['map'])
+print(mAP_dict)
 
